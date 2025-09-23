@@ -1,4 +1,10 @@
+from colorama import Fore, Back, Style
+import datetime
 import kivy
+import GpsProcess
+from kivy.uix.gridlayout import GridLayout
+from kivy.uix.widget import Widget
+from kivy.uix.button import Button
 from kivy.lang import Builder
 from kivy.app import App
 from kivy.properties import StringProperty
@@ -7,16 +13,47 @@ from kivy.utils import platform
 import time
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from FileWork import FileManager
-
+from ServerWorks import ServerManager
+from GpsProcess import *
+from kivy.uix.label import Label
 if platform == "android":
     from plyer import gps
-    
-    
+
 Builder.load_file(filename='main.kv')
 
-#миксин для классов, работающих с жипиэс
+class GpsStopRecordingScreen2(Screen):
+    pass
+
+class Wp(Widget):
+    pass
+
+class SavedTrail(Wp):
+    pass
+
+class PublicTrail(Wp):
+    pass
+
+class UserTime(Wp):
+    pass
+
+class TrailInfoScreen(Screen):
+    pass
+
+class StopGpsScreen(Screen):
+    pass
+
+class SavedTrailsScreen(Screen):
+    pass      
     
-    
+class LoginSignUpScreen(Screen):
+    pass
+
+class LoginScreen(Screen):
+    pass
+
+class SignUpScreen(Screen):
+    pass
+
 class GpsStartRecordingScreen(Screen):
     pass
 
@@ -35,9 +72,12 @@ class TestScreen(Screen):
     pass
 
 
+class SavedTrailzScreen0(Screen):
+    pass
+
 MainFileManager = FileManager()
 MainScreenManager = ScreenManager()
-
+MainServerManager = ServerManager()
 
 class Trailz(App):
     
@@ -48,7 +88,92 @@ class Trailz(App):
         self._GPSJsonDict = {'GPSData':{}}
         self._jsonTrailPath = "saved_trails/"
         self._MinDistancePar = 1
-
+        self._config = {}
+        self.current_trail_id = ""
+    
+    def login(self) -> None:
+        email = MainScreenManager.get_screen("LoginScreen").ids.email.text
+        password = MainScreenManager.get_screen("LoginScreen").ids.password.text
+        #добавить поп ап
+        if str(MainServerManager.login(email=email,password=password)) == "False":
+            pass    
+        else:
+            self.switch_toSTR("MenuScreen")
+            MainFileManager.configure(email=email,password=password)
+        
+    def sign_up(self):
+        email = MainScreenManager.get_screen("SignUpScreen").ids.email.text
+        password = MainScreenManager.get_screen("SignUpScreen").ids.password.text
+        username = MainScreenManager.get_screen("SignUpScreen").ids.username.text
+        #добавить поп ап
+        if str(MainServerManager.sign_up(email=email,password=password,username=username)) != "success":
+            pass
+        else:
+            self.switch_toSTR("MenuScreen")
+            MainFileManager.configure(email=email,password=password)
+            
+    def send_own_trail(self,trail_name):
+        #добавить поп ап
+        #метод у файл менеджера, тк файл должен быть открыт во время загрузки
+        MainFileManager.load_own_trail(trail_name, self._config["email"],self._config["password"])    
+          
+    def creat_own_saved_trails_screen(self):
+        MainScreenManager.get_screen('SavedTrailsScreen').ids.MainLayout.clear_widgets()
+        saved_trails = MainFileManager.get_own_saved_trails_info()
+        MainScreen = MainScreenManager.get_screen('SavedTrailsScreen')
+        for i in range(len(saved_trails)):
+            trail = SavedTrail()
+            MainScreen.ids.MainLayout.ids[f"trail_{i}"] = trail
+            MainScreen.ids.MainLayout.ids[f"trail_{i}"].name = saved_trails[i]["name"]
+            MainScreen.ids.MainLayout.ids[f"trail_{i}"].description = saved_trails[i]["description"]    
+            MainScreen.ids.MainLayout.add_widget(trail)
+        
+    def create_public_trails_screen(self,page=0):
+        sort_type = "default"
+        location = " "
+        MainScreen = MainScreenManager.get_screen('MenuScreen')
+        MainScreen.ids.MainLayout.clear_widgets()
+        trail_list = MainServerManager.get_all_trails(sort_type,location,page)
+        if page != 0 and trail_list == []:
+            page -= 2
+        i = 0
+        for trail_data in trail_list:
+            trail = PublicTrail()
+            MainScreen.ids.MainLayout.ids[f"trail_{i}"] = trail
+            MainScreen.ids.MainLayout.ids[f"trail_{i}"].trail_name = trail_data[0]
+            MainScreen.ids.MainLayout.ids[f"trail_{i}"].username = trail_data[1]
+            MainScreen.ids.MainLayout.ids[f"trail_{i}"].distance = str(trail_data[2]) + " km"
+            MainScreen.ids.MainLayout.ids[f"trail_{i}"].date = trail_data[3]
+            MainScreen.ids.MainLayout.ids[f"trail_{i}"].trail_id = trail_data[6]
+            MainScreen.ids.MainLayout.ids[f"trail_{i}"].description = trail_data[7]
+            MainScreen.ids.MainLayout.add_widget(trail)
+            i+=1
+        MainScreen.ids.MainLayout.amount = i + 1
+        MainButton = Button(text="загрузить ещё",size_hint_y=None)
+        MainButton.bind(on_press=lambda x:self.create_public_trails_screen(page+1))
+        MainScreen.ids.MainLayout.add_widget(MainButton)
+        
+    def create_leaderboard_screen(self,page=0):
+        MainScreen = MainScreenManager.get_screen('TrailInfoScreen')
+        MainScreen.ids.MainLayout.clear_widgets()
+        trail_id = MainScreen.trail_id
+        data_list = MainServerManager.get_leaderboard(trail_id)
+        if page != 0 and data_list == []:
+            page -= 2
+        i = 0
+        for data in data_list:
+            user_time = UserTime()
+            MainScreen.ids.MainLayout.ids[f"user_time_{i}"] = user_time
+            MainScreen.ids.MainLayout.ids[f"user_time_{i}"].username = data[0]
+            MainScreen.ids.MainLayout.ids[f"user_time_{i}"].run_time = data[1]
+            MainScreen.ids.MainLayout.add_widget(user_time)
+            i+=1
+            
+        MainScreen.ids.MainLayout.amount = i + 1
+        MainButton = Button(text="загрузить ещё",size_hint_y=None)
+        MainButton.bind(on_press=lambda x:self.create_leaderboard_screen(page+1))
+        MainScreen.ids.MainLayout.add_widget(MainButton)
+    
     def switch_toSTR(self, screenSTR : str) -> None:
         MainScreenManager.current = screenSTR
 
@@ -67,14 +192,30 @@ class Trailz(App):
                 print("callback. Some permissions refused.")
         if not all(check_permission(permission) for permission in PermissionList): 
             request_permissions(PermissionList, callback)
-        
+
     def build(self):
         global MainScreenManager
+        MainScreenManager.add_widget(LoginSignUpScreen(name="LoginSignUpScreen"))
+        MainScreenManager.add_widget(LoginScreen(name="LoginScreen"))
+        MainScreenManager.add_widget(SignUpScreen(name="SignUpScreen"))
+        MainScreenManager.add_widget(TrailInfoScreen(name="TrailInfoScreen"))
         MainScreenManager.add_widget(MenuScreen(name='MenuScreen'))
         MainScreenManager.add_widget(GpsInfoScreen(name='GpsInfoScreen'))
+        MainScreenManager.add_widget(SavedTrailsScreen(name='SavedTrailsScreen'))
+        MainScreenManager.add_widget(StopGpsScreen(name='SavedTrailsScreen'))
+        MainScreenManager.add_widget(GpsStopRecordingScreen2(name="GpsStopRecordingScreen2"))
+        self.creat_own_saved_trails_screen()
+        self.create_public_trails_screen()
         MainScreenManager.add_widget(GpsStartRecordingScreen(name='GpsStartRecordingScreen'))
         MainScreenManager.add_widget(GpsStopRecordingScreen(name='GpsStopRecordingScreen'))
         MainScreenManager.add_widget(TestScreen(name='TestScreen'))
+        
+        self._config = MainFileManager.load_config()
+        if self._config == False:
+            self.switch_toSTR("LoginSignUpScreen")
+        if self._config != False:
+            self.switch_toSTR('MenuScreen')
+        
         if platform == "android":
             try:
                 gps.configure(on_location=self.on_location)
@@ -85,6 +226,22 @@ class Trailz(App):
         MainFileManager.MakeDirs()
         return MainScreenManager
     
+    
+    def send_public_trail(self):
+        MainFileManager.save_public_trail(self._GPSJsonDict,self.current_trail_id)
+        is_valid = MainServerManager.load_public_trail(self.current_trail_id)
+        self._GPSJsonDict = {}
+        
+    def start_rerun(self,trail_id):
+        self._GPSJsonDict = {}
+        try: 
+            self.current_trail_id = trail_id
+            self.start_gps()
+            self.switch_toSTR("GpsStopRecordingScreen2")
+
+        except:
+            print("not implemented")
+       
     @staticmethod
     def start_gps():
         gps.start(0,1)
@@ -99,15 +256,34 @@ class Trailz(App):
         else:
             #не открывается и может выводить ошибку
             pass 
-        
+    
     def Save_GPS_to_json(self) -> None:
         if MainScreenManager.get_screen('GpsInfoScreen').ids.GPSNameInput.text != "" and MainScreenManager.get_screen('GpsInfoScreen').ids.GPSDescriptionInput.text != "" and MainScreenManager.get_screen('GpsInfoScreen').ids.GPSMinDistanceInput.text != "":
             self._GPSJsonDict['name'] = MainScreenManager.get_screen('GpsInfoScreen').ids.GPSNameInput.text
-            self._GPSJsonDict['discription'] = MainScreenManager.get_screen('GpsInfoScreen').ids.GPSDescriptionInput.text
+            self._GPSJsonDict['description'] = MainScreenManager.get_screen('GpsInfoScreen').ids.GPSDescriptionInput.text
             self._GPSJsonDict['MinDistance'] = MainScreenManager.get_screen('GpsInfoScreen').ids.GPSMinDistanceInput.text
+            SecDict = get_gps_info(self._GPSJsonDict)
+            self._GPSJsonDict["avg_speed"] = SecDict["avg_speed"]
+            self._GPSJsonDict["distance"] = SecDict["distance"]
+            self._GPSJsonDict["date"] = datetime.today().strftime('%Y-%m-%d')
             MainFileManager.save_trail(FileName=self._GPSJsonDict['name'], JsonDict=self._GPSJsonDict)
             MainScreenManager.get_screen('TestScreen').ids.TestLabel.text = str(self._GPSJsonDict)
+            self.creat_own_saved_trails_screen()
             MainScreenManager.current = 'TestScreen'
+            self._GPSJsonDict = {}
+            
+    def open_gps_info_screen(self,name,username,date,distance,description,trail_id):
+        MainScreen = MainScreenManager.get_screen("TrailInfoScreen")
+        MainScreen.trail_name = name
+        MainScreen.username = username
+        MainScreen.date = date
+        MainScreen.distance = distance
+        MainScreen.description = description
+        MainScreen.trail_id = trail_id
+        MainScreenManager.current = "TrailInfoScreen"
+        
+    
+        
     @property
     def MinDistanceSetting(self) -> int:
         return self._MinDistancePar
