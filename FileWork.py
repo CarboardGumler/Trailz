@@ -49,9 +49,11 @@ class FileManager():
     def get_own_saved_trails_info(self):
         trail_info_list = []
         for file_name in os.listdir(self.own_saved_trails_dir):
-            with open(str(self.own_saved_trails_dir + "/" + file_name), "r") as file:
-                json_dict = json.load(file)
-                trail_info_list.append({"name":json_dict["name"], "description" : json_dict["description"]})
+            if ".Identifier" not in file_name:
+                print(file_name)
+                with open(str(self.own_saved_trails_dir + "/" + file_name), "r") as file:
+                    json_dict = json.load(file)
+                    trail_info_list.append({"name":json_dict["name"], "description" : json_dict["description"]})
         return trail_info_list
     
     def load_own_trail(self,trail_name,email,password):
