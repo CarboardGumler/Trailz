@@ -272,17 +272,22 @@ class Trailz(App):
             MainScreenManager.current = 'TestScreen'
             self._GPSJsonDict = {}
             
-    def open_gps_info_screen(self,name,username,date,distance,description,trail_id):
+    def open_gps_info_screen(self,trail_name,username,start_date,distance,description,trail_id,**kwargs):
         MainScreen = MainScreenManager.get_screen("TrailInfoScreen")
-        MainScreen.trail_name = name
+        MainScreen.trail_name = trail_name
         MainScreen.username = username
-        MainScreen.date = date
-        MainScreen.distance = distance
+        MainScreen.date = start_date
+        MainScreen.distance = str(distance)
         MainScreen.description = description
         MainScreen.trail_id = trail_id
         MainScreenManager.current = "TrailInfoScreen"
         
-    
+    def search_trail(self):
+        MenuScreen = MainScreenManager.get_screen("MenuScreen")
+        trail_name = MenuScreen.ids.TrailSearch.text
+        if trail_name != "":
+            data = MainServerManager.get_trail(trail_name)["data"]
+            self.open_gps_info_screen(**data)
         
     @property
     def MinDistanceSetting(self) -> int:

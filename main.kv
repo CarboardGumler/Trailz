@@ -206,9 +206,18 @@
     GridLayout:
         cols:1
         id: MainLayout
-        Button:
-            text: "начать запись трейла"
-            on_press: app.open_gps_recording()
+        GridLayout:
+            size_hint_y:0.2
+            id: SecondLayout
+            cols:2
+            TextInput:
+                id: TrailSearch
+                hint_text:"Search trail"
+            Button:
+                id: SearchButton
+                text: "Search"
+                on_press:
+                    app.search_trail()
 
         ScrollView:
             do_scroll_x: False
@@ -220,6 +229,9 @@
                 height:100 * self.amount + 100
                 size_hint_y: None
                 id:MainLayout
+        Button:
+            text: "начать запись трейла"
+            on_press: app.open_gps_recording()
         Button:
             text: "сохранённые трейлы"
             on_press:

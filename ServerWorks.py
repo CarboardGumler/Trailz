@@ -39,7 +39,19 @@ class ServerManager():
         except:
             MainRequest = {"data" : []}
         return MainRequest["data"]
-        
+    
+    def get_trail(self,trail_name):
+        try:
+            MainRequest = requests.get(self.BASE_IP + f"/get_trail/{trail_name}").json()
+        except:
+            MainRequest = {"data" : []}
+        return MainRequest
+    
+    def get_trail_file(self,trail_id):
+        try:
+            MainRequest = requests.get(self.BASE_IP + f"/get_trail_file/{trail_id}").json()
+        except:
+            MainRequest = {"data" : []}
     
 TestManager = ServerManager()
 
