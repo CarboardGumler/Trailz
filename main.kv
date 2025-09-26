@@ -24,8 +24,23 @@
             height:50
             size_hint_y:None
 
-
-
+<UserRuntime@Wp>
+    trail_name:"none"
+    run_time:"none"
+    trail_id: 0
+    pos:root.pos
+    size_hint_y: None
+    FloatLayout:
+        pos:root.pos
+        Label:
+            id:name_text
+            text: root.trail_name
+            pos: 0, root.pos[1] 
+        Label:
+            id:run_time
+            text: root.run_time
+            pos: 0, root.pos[1]/2
+         
 <PublicTrail@Wp>
     trail_name: "test"
     username: "test"
@@ -218,6 +233,14 @@
                 text: "Search"
                 on_press:
                     app.search_trail()
+            TextInput:
+                id: UserSearch
+                hint_text:"Search user"
+            Button:
+                id: SearchButton
+                text: "Search"
+                on_press:
+                    app.search_trail()
 
         ScrollView:
             do_scroll_x: False
@@ -302,6 +325,23 @@
             on_press: app.switch_toSTR("MenuScreen")
 
 
+<ProfileScreen>
+    GridLayout:
+        id:MainLayout
+        cols:1
+        Label:
+            id: username
+            text:"none"
+        ScrollView:
+            do_scroll_x: False
+            do_scroll_y: True
+            BoxLayout:
+                amount:0
+                spacing:20
+                orientation: 'vertical'
+                height:100 * self.amount + 100
+                size_hint_y: None
+                id:SecondLayout
         
 
         

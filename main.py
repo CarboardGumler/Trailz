@@ -21,6 +21,9 @@ if platform == "android":
 
 Builder.load_file(filename='main.kv')
 
+class ProfileScreen(Screen):
+    pass
+
 class GpsStopRecordingScreen2(Screen):
     pass
 
@@ -34,6 +37,9 @@ class PublicTrail(Wp):
     pass
 
 class UserTime(Wp):
+    pass
+
+class   UserRuntime(Wp):
     pass
 
 class TrailInfoScreen(Screen):
@@ -209,6 +215,7 @@ class Trailz(App):
         MainScreenManager.add_widget(GpsStartRecordingScreen(name='GpsStartRecordingScreen'))
         MainScreenManager.add_widget(GpsStopRecordingScreen(name='GpsStopRecordingScreen'))
         MainScreenManager.add_widget(TestScreen(name='TestScreen'))
+        MainScreenManager.add_widget(ProfileScreen(name="ProfileScreen"))
         
         self._config = MainFileManager.load_config()
         if self._config == False:
@@ -289,6 +296,23 @@ class Trailz(App):
             data = MainServerManager.get_trail(trail_name)["data"]
             self.open_gps_info_screen(**data)
         
+    def open_profile(self):
+        MenuScreen = MainScreenManager.get_screen("MenuScreen")
+        ProfileScreen = MainScreenManager.get_screen("ProfileScreen")
+        username = MenuScreen.ids.UserSearch.text
+        if username != "":
+            ProfileScreen.ids.SecondLayout.clear_widgets()
+            ProfileScreen.ids.username.text = username
+            data = MainServerManager.get_user_runtimes(username)["data"]
+            for runtime in data:
+                runtime_wideget = UserRuntime()
+                ProfileScreen.ids[f"trail_{runtime}"] = runtime_wideget
+                ProfileScreen.ids[f"trail_{runtime}"].name_text = runtime
+                ProfileScreen.ids[f"trail_{runtime}"].run_time = str(data[runtime])
+                ProfileScreen.add_widget(runtime_wideget)
+            MainScreenManager.current = ProfileScreen
+        
+            
     @property
     def MinDistanceSetting(self) -> int:
         return self._MinDistancePar
@@ -296,6 +320,7 @@ class Trailz(App):
     @property
     def GPSJsonDict(self) -> dict:
         return self._GPSJsonDict
+    
     
     def Pass(self):
         pass
