@@ -33,9 +33,9 @@ class ServerManager():
         except:
             pass
         
-    def get_leaderboard(self,trail_id):
+    def get_leaderboard(self,trail_id,page):
         try:
-            MainRequest = requests.get(self.BASE_IP + f"/get_leaderboard/{trail_id}").json()
+            MainRequest = requests.get(self.BASE_IP + f"/get_leaderboard/{trail_id}/{page}").json()
         except:
             MainRequest = {"data" : []}
         return MainRequest["data"]

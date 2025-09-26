@@ -158,23 +158,23 @@ class Trailz(App):
         MainButton = Button(text="загрузить ещё",size_hint_y=None)
         MainButton.bind(on_press=lambda x:self.create_public_trails_screen(page+1))
         MainScreen.ids.MainLayout.add_widget(MainButton)
-        
+    
     def create_leaderboard_screen(self,page=0):
         MainScreen = MainScreenManager.get_screen('TrailInfoScreen')
         MainScreen.ids.MainLayout.clear_widgets()
         trail_id = MainScreen.trail_id
-        data_list = MainServerManager.get_leaderboard(trail_id)
+        data_list = MainServerManager.get_leaderboard(trail_id,page)
         if page != 0 and data_list == []:
             page -= 2
         i = 0
         for data in data_list:
             user_time = UserTime()
             MainScreen.ids.MainLayout.ids[f"user_time_{i}"] = user_time
-            MainScreen.ids.MainLayout.ids[f"user_time_{i}"].username = data[0]
-            MainScreen.ids.MainLayout.ids[f"user_time_{i}"].run_time = data[1]
+            MainScreen.ids.MainLayout.ids[f"user_time_{i}"].username = str(data[0])
+            MainScreen.ids.MainLayout.ids[f"user_time_{i}"].run_time = str(data[1])
             MainScreen.ids.MainLayout.add_widget(user_time)
             i+=1
-            
+
         MainScreen.ids.MainLayout.amount = i + 1
         MainButton = Button(text="загрузить ещё",size_hint_y=None)
         MainButton.bind(on_press=lambda x:self.create_leaderboard_screen(page+1))
@@ -279,7 +279,7 @@ class Trailz(App):
             MainScreenManager.current = 'TestScreen'
             self._GPSJsonDict = {}
             
-    def open_gps_info_screen(self,trail_name,username,start_date,distance,description,trail_id,**kwargs):
+    def open_trail_info_screen(self,trail_name,username,start_date,distance,description,trail_id,**kwargs):
         MainScreen = MainScreenManager.get_screen("TrailInfoScreen")
         MainScreen.trail_name = trail_name
         MainScreen.username = username
@@ -287,6 +287,7 @@ class Trailz(App):
         MainScreen.distance = str(distance)
         MainScreen.description = description
         MainScreen.trail_id = trail_id
+        self.create_leaderboard_screen()
         MainScreenManager.current = "TrailInfoScreen"
         
     def search_trail(self):
@@ -294,7 +295,7 @@ class Trailz(App):
         trail_name = MenuScreen.ids.TrailSearch.text
         if trail_name != "":
             data = MainServerManager.get_trail(trail_name)["data"]
-            self.open_gps_info_screen(**data)
+            self.open_trail_info_screen(**data)
         
     def open_profile(self):
         MenuScreen = MainScreenManager.get_screen("MenuScreen")
