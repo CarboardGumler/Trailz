@@ -1,5 +1,4 @@
 import requests
-from colorama import Fore, Back, Style
 import json
 
 class ServerManager():
