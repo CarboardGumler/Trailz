@@ -1,4 +1,4 @@
-from colorama import Fore, Back, Style
+
 import datetime
 import kivy
 import GpsProcess
