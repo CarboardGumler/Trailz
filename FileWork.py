@@ -21,6 +21,7 @@ class FileManager():
             cache_dir = os.getcwd()
             
         self.own_saved_trails_dir = "own_saved_trails"
+        self.MakeDirs()
         self.cache_dir = cache_dir
         
     def MakeDirs(self):
