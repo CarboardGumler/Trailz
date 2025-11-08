@@ -6,12 +6,18 @@ class ServerManager():
         self.BASE_IP = BASE_IP
 
     def login(self,email:str,password:str) -> str:
-        MainRequest = requests.get(self.BASE_IP + f"/login/{email}/{password}")
-        return MainRequest.text
+        try:
+            MainRequest = requests.get(self.BASE_IP + f"/login/{email}/{password}")
+            return MainRequest.text
+        except:
+            return "False"
     
     def sign_up(self,email:str,password:str,username:str) -> str:
-        return requests.get(self.BASE_IP + f"/sign_up/{email}/{password}/{username}").text
-    
+        try:
+            return requests.get(self.BASE_IP + f"/sign_up/{email}/{password}/{username}").text
+        except:
+            return "False"
+        
     def load_own_trail(self,trail_name,email,distance,date,start_lat,start_lon,description,password,file):
         try:
             main_req = requests.post(url=str(self.BASE_IP + f"/add_trail/{trail_name}/{distance}/{date}/{start_lat}/{start_lon}/{description}/{email}/{password}"),files={"file" : file}).text
