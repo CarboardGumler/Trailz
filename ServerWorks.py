@@ -2,7 +2,7 @@ import requests
 import json
 
 class ServerManager():
-    def __init__(self, BASE_IP="http://127.0.0.1:5000/"):
+    def __init__(self, BASE_IP="https://carbordgumler.pythonanywhere.com/"):
         self.BASE_IP = BASE_IP
 
     def login(self,email:str,password:str) -> str:
