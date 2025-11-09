@@ -139,7 +139,11 @@ class Trailz(App):
         location = " "
         MainScreen = MainScreenManager.get_screen('MenuScreen')
         MainScreen.ids.MainLayout.clear_widgets()
-        trail_list = MainServerManager.get_all_trails(sort_type,location,page)
+        if MainScreen.ids.TrailSearch.text == "":
+            trail_list = MainServerManager.get_all_trails(sort_type,location,page)
+        else:
+             trail_list = MainServerManager.get_trail_key_word(MainScreen.ids.TrailSearch.text,page)["data"]
+        print(trail_list)
         if page != 0 and trail_list == []:
             page -= 2
         i = 0
@@ -248,7 +252,7 @@ class Trailz(App):
 
         except:
             print("not implemented")
-       
+
     @staticmethod
     def start_gps():
         gps.start(0,1)
@@ -294,8 +298,8 @@ class Trailz(App):
         MenuScreen = MainScreenManager.get_screen("MenuScreen")
         trail_name = MenuScreen.ids.TrailSearch.text
         if trail_name != "":
-            data = MainServerManager.get_trail(trail_name)["data"]
-            self.open_trail_info_screen(**data)
+            self.create_public_trails_screen(0)
+        
         
     def open_profile(self):
         MenuScreen = MainScreenManager.get_screen("MenuScreen")

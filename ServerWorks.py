@@ -2,7 +2,7 @@ import requests
 import json
 
 class ServerManager():
-    def __init__(self, BASE_IP="https://carbordgumler.pythonanywhere.com/"):
+    def __init__(self, BASE_IP="http://127.0.0.1:5000/"):
         self.BASE_IP = BASE_IP
 
     def login(self,email:str,password:str) -> str:
@@ -61,6 +61,12 @@ class ServerManager():
     def get_user_runtimes(self,username):
         try:
             MainRequest = requests.get(self.BASE_IP + f"/get_profile/{username}").json()
+        except:
+            MainRequest = {"data" : []}
+        return MainRequest
+    def get_trail_key_word(self,word,page):
+        try:
+            MainRequest = requests.get(self.BASE_IP + f"/search_key_word/{word}/{page}").json()
         except:
             MainRequest = {"data" : []}
         return MainRequest
