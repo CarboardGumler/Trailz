@@ -2,12 +2,13 @@ import requests
 import json
 
 class ServerManager():
-    def __init__(self, BASE_IP="http://127.0.0.1:5000"):
+    def __init__(self, BASE_IP="https://carbordgumler.pythonanywhere.com/"):
         self.BASE_IP = BASE_IP
 
     def login(self,email:str,password:str) -> str:
         try:
             MainRequest = requests.get(self.BASE_IP + f"/login/{email}/{password}")
+            print(MainRequest)
             return MainRequest.text
         except:
             return "False"
