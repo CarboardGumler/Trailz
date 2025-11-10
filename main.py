@@ -273,6 +273,7 @@ class Trailz(App):
             self._GPSJsonDict['name'] = MainScreenManager.get_screen('GpsInfoScreen').ids.GPSNameInput.text
             self._GPSJsonDict['description'] = MainScreenManager.get_screen('GpsInfoScreen').ids.GPSDescriptionInput.text
             self._GPSJsonDict['MinDistance'] = MainScreenManager.get_screen('GpsInfoScreen').ids.GPSMinDistanceInput.text
+            print(self._GPSJsonDict)
             SecDict = get_gps_info(self._GPSJsonDict)
             self._GPSJsonDict["avg_speed"] = SecDict["avg_speed"]
             self._GPSJsonDict["distance"] = SecDict["distance"]

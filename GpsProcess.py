@@ -3,6 +3,8 @@ def sqr(value):
     return value*value
 
 def get_gps_info(gpsDict:dict):
+    if len(list(gpsDict["GPSData"].keys())) == 0:
+        return {"avg_speed": 0, "distance": 0}
     distance = 0
     radius =  6369427
     pi = 3.1415

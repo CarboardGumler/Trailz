@@ -136,7 +136,7 @@
         cols:1
         Button:
             text:"стоп"
-            on_press: app.send_public_trail(), app.stop_gps() 
+            on_press: app.Save_GPS_to_json(), app.stop_gps() 
 
 
 <LoginSignUpScreen>
@@ -276,7 +276,6 @@
             text: "стоп"
             on_press:
                 app.stop_gps()
-                app.send_public_trail()
                 app.switch_toSTR('GpsInfoScreen')
 
 <GpsStopRecordingScreen2>
@@ -286,8 +285,7 @@
             text: "стоп"
             on_press:
                 app.stop_gps()
-                app.save_public_trail()
-                app.switch_toSTR('MenuScreen')
+                app.switch_toSTR('GpsInfoScreen')
 
 <GpsInfoScreen>
     GridLayout:
