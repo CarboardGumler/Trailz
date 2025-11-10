@@ -3,7 +3,7 @@ def sqr(value):
     return value*value
 
 def get_gps_info(gpsDict:dict):
-    if len(list(gpsDict["GPSData"].keys())) == 0:
+    if len(list(gpsDict["GPSData"].keys())) < 2:
         return {"avg_speed": 0, "distance": 0}
     distance = 0
     radius =  6369427
@@ -17,5 +17,3 @@ def get_gps_info(gpsDict:dict):
     avg_speed = distance / ((max([int(i) for i in list(gpsDict["GPSData"].keys())]) - min([int(i) for i in list(gpsDict["GPSData"].keys())]))/3600)
     avg_speed = round(avg_speed, 1)
     return {"avg_speed": avg_speed, "distance": distance}
-
-
