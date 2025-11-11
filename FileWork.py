@@ -28,7 +28,11 @@ class FileManager():
         if self.own_saved_trails_dir not in os.listdir(self.cache_dir):
             path = os.path.join(self.cache_dir, self.own_saved_trails_dir)
             os.makedirs(path)
+    def log_out(self):
+        path = os.path.join(self.cache_dir,"config.json")
+        os.remove(path)
     
+        
     def load_config(self):
         if "config.json" not in os.listdir(self.cache_dir):
             return False

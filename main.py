@@ -318,7 +318,9 @@ class Trailz(App):
                 ProfileScreen.add_widget(runtime_wideget)
             MainScreenManager.current = ProfileScreen
         
-            
+    def log_out(self):
+        MainFileManager.log_out()
+        App.get_running_app().stop()
     @property
     def MinDistanceSetting(self) -> int:
         return self._MinDistancePar

@@ -225,6 +225,11 @@
             size_hint_y:0.2
             id: SecondLayout
             cols:2
+            Button:
+                id: LogOutButton
+                text: "Log Out"
+                on_press:
+                    app.log_out()
             TextInput:
                 id: TrailSearch
                 hint_text:"Search trail"
