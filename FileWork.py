@@ -43,6 +43,7 @@ class FileManager():
     def configure(self, **kwargs):
         with open(os.path.join(self.cache_dir,"config.json"), "w") as file:
             json.dump(kwargs,file,ensure_ascii=True)
+            
 
     def save_trail(self,JsonDict, FileName):
         FileName = os.path.join(self.cache_dir,self.own_saved_trails_dir,f"{FileName}.json")
@@ -80,7 +81,9 @@ class FileManager():
     def save_public_trail(self,JsonDict,trail_id):
         FileName = "PublicTrail"
         FileName = os.path.join(self.cache_dir,f"{FileName}.json")
-        config = self.configure()
+        with open(os.path.join(self.cache_dir,"config.json")) as file:
+            config  = json.load(file)
+        print(config)
         email = config["email"]
         password = config["password"]
         with open(str(FileName), "w") as file:
@@ -91,5 +94,5 @@ class FileManager():
         req = MainServerManager.load_public_trail(trail_id,email,password,file)
         file.close()
         return req
-        
+    
         
