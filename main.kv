@@ -290,7 +290,8 @@
             text: "стоп"
             on_press:
                 app.stop_gps()
-                app.switch_toSTR('GpsInfoScreen')
+                app.send_public_trail()
+                app.switch_toSTR('MenuScreen')
 
 <GpsInfoScreen>
     GridLayout:
