@@ -282,7 +282,7 @@ class Trailz(App):
             MainScreenManager.get_screen('TestScreen').ids.TestLabel.text = str(self._GPSJsonDict)
             self.creat_own_saved_trails_screen()
             MainScreenManager.current = 'TestScreen'
-            self._GPSJsonDict = {}
+            self._GPSJsonDict = {'GPSData':{}}
             
     def open_trail_info_screen(self,trail_name,username,start_date,distance,description,trail_id,**kwargs):
         MainScreen = MainScreenManager.get_screen("TrailInfoScreen")
