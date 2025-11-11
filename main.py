@@ -333,6 +333,6 @@ class Trailz(App):
     
 
 
-#if __name__ == '__main__':
-    #Trailz().run()
+if __name__ == '__main__':
+    Trailz().run()
     
