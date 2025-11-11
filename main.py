@@ -277,7 +277,7 @@ class Trailz(App):
             SecDict = get_gps_info(self._GPSJsonDict)
             self._GPSJsonDict["avg_speed"] = SecDict["avg_speed"]
             self._GPSJsonDict["distance"] = SecDict["distance"]
-            self._GPSJsonDict["date"] = datetime.today().strftime('%Y-%m-%d')
+            self._GPSJsonDict["date"] = datetime.datetime.today().strftime('%Y-%m-%d')
             MainFileManager.save_trail(FileName=self._GPSJsonDict['name'], JsonDict=self._GPSJsonDict)
             MainScreenManager.get_screen('TestScreen').ids.TestLabel.text = str(self._GPSJsonDict)
             self.creat_own_saved_trails_screen()
@@ -331,6 +331,8 @@ class Trailz(App):
     def Pass(self):
         pass
     
-if __name__ == '__main__':
-    Trailz().run()
+
+
+#if __name__ == '__main__':
+    #Trailz().run()
     
