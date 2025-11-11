@@ -241,10 +241,10 @@ class Trailz(App):
     def send_public_trail(self):
         MainFileManager.save_public_trail(self._GPSJsonDict,self.current_trail_id)
         is_valid = MainServerManager.load_public_trail(self.current_trail_id)
-        self._GPSJsonDict = {}
+        self._GPSJsonDict = {'GPSData':{}}
         
     def start_rerun(self,trail_id):
-        self._GPSJsonDict = {}
+        self._GPSJsonDict = {'GPSData':{}}
         try: 
             self.current_trail_id = trail_id
             self.start_gps()
