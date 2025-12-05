@@ -150,12 +150,12 @@ class Trailz(App):
         for trail_data in trail_list:
             trail = PublicTrail()
             MainScreen.ids.MainLayout.ids[f"trail_{i}"] = trail
-            MainScreen.ids.MainLayout.ids[f"trail_{i}"].trail_name = trail_data[0]
+            MainScreen.ids.MainLayout.ids[f"trail_{i}"].trail_name = str(trail_data[0])
             MainScreen.ids.MainLayout.ids[f"trail_{i}"].username = trail_data[1]
             MainScreen.ids.MainLayout.ids[f"trail_{i}"].distance = str(trail_data[2]) + " km"
             MainScreen.ids.MainLayout.ids[f"trail_{i}"].date = trail_data[3]
             MainScreen.ids.MainLayout.ids[f"trail_{i}"].trail_id = trail_data[6]
-            MainScreen.ids.MainLayout.ids[f"trail_{i}"].description = trail_data[7]
+            MainScreen.ids.MainLayout.ids[f"trail_{i}"].description = trail_data[7] 
             MainScreen.ids.MainLayout.add_widget(trail)
             i+=1
         MainScreen.ids.MainLayout.amount = i + 1
