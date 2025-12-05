@@ -35,10 +35,10 @@ class ServerManager():
 
     def load_public_trail(self,trail_id,password,email,file):
         try:
-            MainRequest = requests.post(url=str(self.BASE_IP + f"/load_rerun/<{trail_id}>/<{password}>/<{email}>"),files={"file":file})
+            MainRequest = requests.post(url=str(self.BASE_IP + f"/load_rerun/<{email}>/<{password}>/<{trail_id}>"),files={"file":file})
         except:
             pass
-        
+            
     def get_leaderboard(self,trail_id,page):
         try:
             MainRequest = requests.get(self.BASE_IP + f"/get_leaderboard/{trail_id}/{page}").json()
