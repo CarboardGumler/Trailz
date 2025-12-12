@@ -41,9 +41,11 @@ class ServerManager():
             
     def get_leaderboard(self,trail_id,page):
         try:
-            MainRequest = requests.get(self.BASE_IP + f"/get_leaderboard/{trail_id}/{page}").json()
+            MainRequest = requests.post(self.BASE_IP + f"/get_leaderboard/{int(trail_id)}/{int(page)}").json()
+            print(f"/get_leaderboard/{int(trail_id)}/{int(page)}", MainRequest)
         except:
             MainRequest = {"data" : []}
+        
         return MainRequest["data"]
     
     def get_trail(self,trail_name):
@@ -75,5 +77,6 @@ TestManager = ServerManager()
 
 
     
+print(TestManager.get_leaderboard(1,0))
         
 

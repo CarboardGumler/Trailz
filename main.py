@@ -151,11 +151,11 @@ class Trailz(App):
             trail = PublicTrail()
             MainScreen.ids.MainLayout.ids[f"trail_{i}"] = trail
             MainScreen.ids.MainLayout.ids[f"trail_{i}"].trail_name = str(trail_data[0])
-            MainScreen.ids.MainLayout.ids[f"trail_{i}"].username = trail_data[1]
+            MainScreen.ids.MainLayout.ids[f"trail_{i}"].username = str(trail_data[1])
             MainScreen.ids.MainLayout.ids[f"trail_{i}"].distance = str(trail_data[2]) + " km"
-            MainScreen.ids.MainLayout.ids[f"trail_{i}"].date = trail_data[3]
-            MainScreen.ids.MainLayout.ids[f"trail_{i}"].trail_id = trail_data[6]
-            MainScreen.ids.MainLayout.ids[f"trail_{i}"].description = trail_data[7] 
+            MainScreen.ids.MainLayout.ids[f"trail_{i}"].date = str(trail_data[3])
+            MainScreen.ids.MainLayout.ids[f"trail_{i}"].trail_id = str(trail_data[6])
+            MainScreen.ids.MainLayout.ids[f"trail_{i}"].description = str(trail_data[7]) 
             MainScreen.ids.MainLayout.add_widget(trail)
             i+=1
         MainScreen.ids.MainLayout.amount = i + 1
@@ -269,6 +269,9 @@ class Trailz(App):
     
     def Save_GPS_to_json(self) -> None:
         if MainScreenManager.get_screen('GpsInfoScreen').ids.GPSNameInput.text != "" and MainScreenManager.get_screen('GpsInfoScreen').ids.GPSDescriptionInput.text != "" and MainScreenManager.get_screen('GpsInfoScreen').ids.GPSMinDistanceInput.text != "":
+            if self._GPSJsonDict['GPSData'] == {}:
+                MainScreenManager.current = "MenuScreen"
+                return None
             self._GPSJsonDict['name'] = MainScreenManager.get_screen('GpsInfoScreen').ids.GPSNameInput.text
             self._GPSJsonDict['description'] = MainScreenManager.get_screen('GpsInfoScreen').ids.GPSDescriptionInput.text
             self._GPSJsonDict['MinDistance'] = MainScreenManager.get_screen('GpsInfoScreen').ids.GPSMinDistanceInput.text
@@ -280,7 +283,7 @@ class Trailz(App):
             MainFileManager.save_trail(FileName=self._GPSJsonDict['name'], JsonDict=self._GPSJsonDict)
             MainScreenManager.get_screen('TestScreen').ids.TestLabel.text = str(self._GPSJsonDict)
             self.creat_own_saved_trails_screen()
-            MainScreenManager.current = 'TestScreen'
+            MainScreenManager.current = 'MenuScreen'
             self._GPSJsonDict = {'GPSData':{}}
             
     def open_trail_info_screen(self,trail_name,username,start_date,distance,description,trail_id,**kwargs):
