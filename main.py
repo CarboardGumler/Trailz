@@ -114,7 +114,7 @@ class Trailz(App):
         self._MinDistancePar = 1
         self._config = {}
         self.current_trail_id = ""
-        self.preview_mode = True
+        self.preview_mode = False
         
     def login(self) -> None:
         if self.preview_mode:
