@@ -4,6 +4,7 @@ import os
 from os import listdir
 from os.path import isfile, join
 from ServerWorks import ServerManager
+from mapDRAW import MapDrawer
 
 MainServerManager = ServerManager()
 
@@ -51,6 +52,15 @@ class FileManager():
             json.dump(JsonDict, file)
         if platform == "android":
             SharedStorage().copy_to_shared(private_file=FileName)
+
+    def save_trail_html(self, GPSdict, FileName):
+        FileName = os.path.join(self.cache_dir,self.own_saved_trails_dir,f"{FileName}.html")
+        with open(str(FileName), "w") as file:
+            mapdrawer = MapDrawer()
+            mapdrawer.plot_route(GPSdict, FileName)
+        if platform == "android":
+            SharedStorage().copy_to_shared(private_file=FileName)
+
             
     def get_own_saved_trails_info(self):
         trail_info_list = []

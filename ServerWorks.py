@@ -59,7 +59,8 @@ class ServerManager():
         try:
             MainRequest = requests.get(self.BASE_IP + f"/get_trail_file/{trail_id}").json()
         except:
-            MainRequest = {"data" : []}
+            MainRequest = {"data" : {}}
+        return MainRequest
     def get_user_runtimes(self,username):
         try:
             MainRequest = requests.get(self.BASE_IP + f"/get_profile/{username}").json()
